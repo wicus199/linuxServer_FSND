@@ -6,29 +6,30 @@ This README details the steps followed to host the Item Catalog project, done as
 * **IP Address**: 52.56.103.136
 * **SSH Port**: 2200
 
-## Wesite URL 
+## Website URL 
 http://ec2-52-56-103-136.eu-west-2.compute.amazonaws.com/
 
 ## Server setup process
 
 This section details the steps performed to set up the server to host the Item Catalog project. A summary of the steps are:
 * Set up the firewall to only allow incoming connections on certain ports
-* Changed the SSH port from 22 to 2200
+* Changed the SSH port from `22` to `2200`
 * Created a `grader` account with `sudo` privileges
 * Created an `.ssh` directory for the `grader` user with limited permission
 * Generated a key pair for the `grader` user to be able to use ssh to login to the server
 * Changed the local timezone to UTC
 * Install global packages using the `sudo` command
-* Checkout the GitHub repository of the Item Catalog project to the /var/www/itemCatalog directory
+* Checkout the GitHub repository of the Item Catalog project to the `/var/www/itemCatalog` directory
 * Set up a python3 virtual environment inside the project directory
 * Activate the virtual environment and install packages necessary for the project
 * Change Apache server configuraion settings
-* Set up a database and run the database.py file to create the tables
+* Set up a database and run the `database.py` file to create the tables
 * Start the server
 
 ### Firewall setup
+
 The `ufw` package was used to set up the firewall for the server. The following steps were performed to set up the firewall:
-* Deny all incoming conenctions by default: `sudo ufw default deny incoming`
+* Deny all incoming connections by default: `sudo ufw default deny incoming`
 * Allow all outgoing connections by default: `sudo ufw default allow outgoing`
 * Allow connections on port `2200` (SSH): `sudo ufw allow 2200/tcp`
 * Allow connections on port `80` (HTTP): `sudo ufw allow 80/tcp`
@@ -36,13 +37,14 @@ The `ufw` package was used to set up the firewall for the server. The following 
 * Enable firewall: `sudo ufw enable`
 
 ### Create and configure grader account
+
 * Create the `grader` user: `sudo adduser grader`
 * Add `grader ALL=(ALL) NOPASSWD:ALL` to `/etc/sudoers.d/90-cloud-init-users` file to grant `sudo` access to `grader`.
 * Create `.ssh` directory in `/home/grader/` to store authorized keys
 * Create `authorized_keys` file inside `.ssh` directory
 * Generate key pairs using `ssh_keygen` command on a local machine 
-* Copy the text inside the locally generated `.pub` file into the `authorized_keys` file on the server
-* The `grader` will now be able to login to the server using a public key
+* Copy the text inside the locally generated `*.pub` file into the `authorized_keys` file on the server
+* The `grader` will now be able to ssh into the server using a public key
 
 The timezone was changed to UTC using the `sudo dpkg-reconfigure tzdata` command.
 
@@ -138,6 +140,7 @@ where `catalog` is the name of the user and `secret` is the passphrase.
 After the database was created, the `database.py` file in the project directory was run using `python3 database.py`. This was to set up the tables inside the database.  
 
 ### Other small changes made
+
 * The `application.py` file in the project directory was changed to `__init__.py`
 * The path to the `client_secrets.json` file was changed in the `__init__.py` to contain an absolute path:
   ```python
@@ -147,9 +150,7 @@ After the database was created, the `database.py` file in the project directory 
 
 ## Third party resources used
 * https://mxtoolbox.com/ for reverse domain name lookup
-* DigitalOcean on how to configure the a flask app for a server: https://www.digitalocean.com/community/tutorials/how-to-deploy-a-flask-application-on-an-ubuntu-vps
+* [DigitalOcean](https://www.digitalocean.com/community/tutorials/how-to-deploy-a-flask-application-on-an-ubuntu-vps) on how to configure the a flask app for a server: 
 * Extensive use of the Udacity forums. That was really helpful
-* The Flask mega tutorial for additional help on configuring the Flask apllication https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-i-hello-world
-* The mod_wsgi user guide on how to use Python virtual environments with mod_wsgi. This helped the most with getting the server to look in the virtual environment for packages http://modwsgi.readthedocs.io/en/develop/user-guides/virtual-environments.html
-
-
+* The [Flask mega tutorial](https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-i-hello-world) for additional help on configuring the Flask apllication 
+* The [mod_wsgi user guide on how to use Python virtual environments with mod_wsgi](http://modwsgi.readthedocs.io/en/develop/user-guides/virtual-environments.html). This helped the most with getting the server to look in the virtual environment for packages.
